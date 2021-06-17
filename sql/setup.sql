@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS pajamas;
+
+CREATE TABLE pajamas (
+    id BIGINT PRIMARY KEY NOT NULL,
+    color TEXT NOT NULL,
+    size TEXT NOT NULL
+);
