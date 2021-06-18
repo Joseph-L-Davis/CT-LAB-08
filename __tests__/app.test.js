@@ -9,14 +9,13 @@ describe('pajama routes', () => {
     return setup(pool);
   });
 
-  it.skip('POST and text user', async () => {
+  it('POST and text user', async () => {
     const res = await request(app)
       .post('/api/v1/pajamas')
       .send({
         color: 'peach',
         size: 'XXL'
       });
-    console.log(res.body);
 
     expect(res.body).toEqual({
       id: '1',
@@ -71,5 +70,20 @@ describe('pajama routes', () => {
       .get(`/api/v1/pajamas/${updatedPinkPair.id}`);
 
     expect(res.body).toEqual(updatedPinkPair);
+  });
+
+  it('DELETE pajama', async () => {
+    const pinkPair = await request(app)
+      .post('/api/v1/pajamas')
+      .send({
+        color: 'pink',
+        size: 'large'
+      });
+
+    const res = await Pajama.deletePajama(pinkPair.body.id);
+    request(app)
+      .delete(`/api/v1/pajamas/${pinkPair.id}`);
+
+    expect(res.body).toEqual(pinkPair.id);
   });
 });
