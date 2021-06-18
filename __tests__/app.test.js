@@ -26,11 +26,7 @@ describe('pajama routes', () => {
   });
 
   it('GET pajama by ID', async () => {
-    const bluePajama = await Pajama.insert({
-      color: 'yellow',
-      size: 'medium'
-    });
-
+  
     const yellowPajama = await Pajama.insert({
       color: 'blue',
       size: 'small'
@@ -40,5 +36,40 @@ describe('pajama routes', () => {
       .get(`/api/v1/pajamas/${yellowPajama.id}`);
 
     expect(res.body).toEqual(yellowPajama);
+  });
+
+  it('GET all pajamas', async () => {
+    const bluePajama = await Pajama.insert({
+      color: 'yellow',
+      size: 'medium'
+    });
+
+    const yellowPajama = await Pajama.insert({
+      color: 'blue',
+      size: 'small'
+    });
+    const res = await request(app)
+      .get('/api/v1/pajamas');
+
+    expect(res.body).toEqual([bluePajama, yellowPajama]);
+  });
+
+  it('PUT pajama size', async () => {
+    const pinkPair = await request(app)
+      .post('/api/v1/pajamas')
+      .send({
+        color: 'pink',
+        size: 'large'
+      });
+
+    const updatedPinkPair = await Pajama.updatePajama(pinkPair.body.id, {
+      color: 'pink',
+      size: 'XL'
+    });
+
+    const res = await request(app)
+      .get(`/api/v1/pajamas/${updatedPinkPair.id}`);
+
+    expect(res.body).toEqual(updatedPinkPair);
   });
 });
